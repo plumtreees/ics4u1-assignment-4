@@ -1,9 +1,17 @@
-<script setup>
-
-</script>
-
 <template>
+  <div>
+  </div>
 </template>
 
-<style scoped>
+<script>
+export default {
+  setup() {
+
+    return {}
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+
 </style>
