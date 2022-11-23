@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import axios from "axios";
 
-const movie = ref(null);
+const movie = ref();
 const clicked = ref(false);
 const id = ref("");
 
@@ -10,16 +10,17 @@ const trailers = ref("");
 const runtime = ref("");
 
 const getMovie = () => {
-  let movie = axios.get(`https://api.themoviedb.org/3/movie/${id.value}`, {
+  movie = axios.get(`https://api.themoviedb.org/3/movie/${id.value}`, {
     params: {
       api_key: "82ec5f2e2891c6f52b2ebda2cc0aa8a6",
       append_to_response: "videos",
     }
   }).then((movie) => {
     clicked.value = true;
+    console.log(clicked.value);
     console.log(movie.data);
-    trailers = movie.data.videos.results.filter((trailer) => trailer.type === "Trailer");
-    runtime = Math.floor(movie.data.runtime / 100) + "h" + movie.data.runtime % 100 + "m";
+    // trailers = movie.data.videos.results.filter((trailer) => trailer.type === "Trailer");
+    // runtime = Math.floor(movie.data.runtime / 100) + "h" + movie.data.runtime % 100 + "m";
   });
 }
 </script>
@@ -42,16 +43,16 @@ const getMovie = () => {
     </select>
     <button id="get" @click="getMovie()">Get</button>
   </div>
+  <p>{{clicked}}</p>
   <p>{{ id }}</p>
-  <div v-if="clicked">clicked</div>
+  <p v-if="clicked">clicked</p>
   <div class="movie-content" v-if="clicked">
     <h1>{{ movie.data.title }}</h1>
-    <h2>{{ movie.data.release_date }} • {{ movie.data.spoken_languages.at(0).english_name }} •
-      {{ movie.data.genres.at(0).name }} • {{ runtime }}</h2>
-    <img id="poster" src="">
-    <iframe id="trailer" src=""></iframe>
-    <h3>{{ tagline }}</h3>
-    <p>{{ overview }}</p>
+    <h2>{{ movie.data.release_date }}</h2>
+    <!--  • {{ movie.data.spoken_languages.at(0).english_name }} •
+      {{ movie.data.genres.at(0).name }} -->
+    <h3>{{ movie.data.tagline }}</h3>
+    <p>{{ movie.data.overview }}</p>
   </div>
 </template>
 
