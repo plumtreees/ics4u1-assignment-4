@@ -1,12 +1,11 @@
 <script setup>
-import Header from './components/Header.vue'
-import HelloWorld from './components/HelloWorld.vue'
+import MovieContent from './components/MovieContent.vue'
 </script>
 
 <template>
-  <Header />
-  <HelloWorld msg="Vite + Vue" />
+  <MovieContent />
 </template>
 
 <style scoped>
+
 </style>
