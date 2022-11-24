@@ -2,27 +2,25 @@
 import { ref } from "vue";
 import axios from "axios";
 
-const movie = ref();
-const clicked = ref(false);
+const movie = ref(false);
 const id = ref("");
 
 const trailers = ref("");
 const runtime = ref("");
 
-const getMovie = () => {
-  movie = axios.get(`https://api.themoviedb.org/3/movie/${id.value}`, {
-    params: {
-      api_key: "82ec5f2e2891c6f52b2ebda2cc0aa8a6",
-      append_to_response: "videos",
-    }
-  }).then((movie) => {
-    clicked.value = true;
-    console.log(clicked.value);
-    console.log(movie.data);
-    // trailers = movie.data.videos.results.filter((trailer) => trailer.type === "Trailer");
-    // runtime = Math.floor(movie.data.runtime / 100) + "h" + movie.data.runtime % 100 + "m";
-  });
-}
+const getMovie = async () => {
+  movie.value = (
+    await axios.get(`https://api.themoviedb.org/3/movie/${id.value}`, {
+      params: {
+        api_key: "82ec5f2e2891c6f52b2ebda2cc0aa8a6",
+        append_to_response: "videos",
+      },
+    })
+  ).data;
+  trailers.value = movie.videos.results.filter((trailer) => trailer.type === "Trailer");
+  runtime.value = Math.floor(movie.runtime / 100) + "h" + (movie.runtime % 100) + "m";
+  console.log(movie);
+};
 </script>
 
 <template>
@@ -43,16 +41,16 @@ const getMovie = () => {
     </select>
     <button id="get" @click="getMovie()">Get</button>
   </div>
-  <p>{{clicked}}</p>
+  <p>{{ runtime }}</p>
   <p>{{ id }}</p>
-  <p v-if="clicked">clicked</p>
-  <div class="movie-content" v-if="clicked">
-    <h1>{{ movie.data.title }}</h1>
-    <h2>{{ movie.data.release_date }}</h2>
-    <!--  • {{ movie.data.spoken_languages.at(0).english_name }} •
-      {{ movie.data.genres.at(0).name }} -->
-    <h3>{{ movie.data.tagline }}</h3>
-    <p>{{ movie.data.overview }}</p>
+  <p v-if="movie">clicked</p>
+  <div class="movie-content" v-if="movie">
+    <h1>{{ movie.title }}</h1>
+    <h2>{{ movie.release_date }} • {{ movie.spoken_languages.at(0).english_name }} • {{ movie.genres.at(0).name }} • {{runtime}}</h2>
+    <h3>{{ movie.tagline }}</h3>
+    <p>{{ movie.overview }}</p>
+    <img :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path" id="poster">
+    <iframe :src="'https://www.youtube.com/embed/' + movie.videos.results.at(0).key" id="trailer"></iframe>
   </div>
 </template>
 
