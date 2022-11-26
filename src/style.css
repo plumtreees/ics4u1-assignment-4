@@ -70,6 +70,7 @@
   justify-self: center;
   align-self: center;
   color: white;
+  text-shadow: 0 0 0.4rem #0000009c;
 }
 
 #poster {
