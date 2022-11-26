@@ -3,9 +3,11 @@ import MovieContent from './components/MovieContent.vue'
 </script>
 
 <template>
-  <Suspense>
-    <MovieContent />
-  </Suspense>
+  <div class="app-container">
+    <Suspense>
+      <MovieContent />
+    </Suspense>
+  </div>
 </template>
 
 <style scoped>

@@ -6,6 +6,7 @@ const movie = ref(false);
 const id = ref("");
 
 const trailers = ref("");
+const bgImg = ref("");
 const runtime = ref("");
 
 const getMovie = async () => {
@@ -18,8 +19,9 @@ const getMovie = async () => {
     })
   ).data;
   trailers.value = movie.videos.results.filter((trailer) => trailer.type === "Trailer");
-  runtime.value = Math.floor(movie.runtime / 100) + "h" + (movie.runtime % 100) + "m";
+  runtime.value = Math.floor(movie.runtime / 60) + "h" + (movie.runtime % 60) + "m";
   console.log(movie);
+  console.log(runtime);
 };
 </script>
 
@@ -42,15 +44,17 @@ const getMovie = async () => {
     <button id="get" @click="getMovie()">Get</button>
   </div>
   <p>{{ runtime }}</p>
-  <p>{{ id }}</p>
-  <p v-if="movie">clicked</p>
-  <div class="movie-content" v-if="movie">
-    <h1>{{ movie.title }}</h1>
-    <h2>{{ movie.release_date }} • {{ movie.spoken_languages.at(0).english_name }} • {{ movie.genres.at(0).name }} • {{runtime}}</h2>
-    <h3>{{ movie.tagline }}</h3>
-    <p>{{ movie.overview }}</p>
-    <img :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path" id="poster">
-    <iframe :src="'https://www.youtube.com/embed/' + movie.videos.results.at(0).key" id="trailer"></iframe>
+  <div class="background-image" :style="{ backgroundImage: 'url(' + movie.backdrop_path + ')' }"></div>
+  <div class="foreground">
+    <div class="movie-content" v-if="movie">
+      <img id="poster" :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path">
+      <h1>{{ movie.title }}</h1>
+      <h2>{{ movie.release_date }} • {{ movie.spoken_languages.at(0).english_name }} • {{ movie.genres.at(0).name }} •
+        {{ runtime }}</h2>
+      <iframe id="trailer" :src="'https://www.youtube.com/embed/' + movie.videos.results.at(0).key"></iframe>
+      <h3>{{ movie.tagline }}</h3>
+      <p id="overview">{{ movie.overview }}</p>
+    </div>
   </div>
 </template>
 
