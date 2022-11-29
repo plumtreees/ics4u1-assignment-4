@@ -5,15 +5,8 @@ import axios from "axios";
 const movie = ref(false);
 const id = ref("");
 
-const trailers = ref(""); //read docs for ref arra 
+const trailer = ref("");
 const runtime = ref("");
-
-// const funct = () => {
-//   trailers.value = movie.videos.results.filter((trailer) => trailer.type === "Trailer");
-//   runtime.value = Math.floor(movie.runtime / 60) + "h" + (movie.runtime % 60) + "m";
-//   console.log(movie);
-//   console.log(runtime);
-// };
 
 const getMovie = async () => {
   movie.value = (
@@ -24,10 +17,8 @@ const getMovie = async () => {
       },
     })
   ).data;
-  trailers.value = movie.value.videos.results.filter((trailer) => trailer.type === "Trailer");
-  console.log(movie.value.runtime);
+  trailer.value = movie.value.videos.results.filter((trailer) => trailer.type === "Trailer").at(0).key;
   runtime.value = `${Math.floor(movie.value.runtime / 60)}h${(movie.value.runtime % 60)}m`;
-  // funct();
 };
 
 </script>
@@ -57,7 +48,7 @@ const getMovie = async () => {
       <h1>{{ movie.title }}</h1>
       <h2>{{ movie.release_date }} • {{ movie.spoken_languages.at(0).english_name }} • {{ movie.genres.at(0).name }} •
         {{ runtime }}</h2>
-      <iframe id="trailer" :src="'https://www.youtube.com/embed/' + movie.videos.results.at(0).key"></iframe>
+      <iframe id="trailer" :src="`https://www.youtube.com/embed/${trailer}`"></iframe>
       <h3>{{ movie.tagline }}</h3>
       <p id="overview">{{ movie.overview }}</p>
     </div>
@@ -65,5 +56,106 @@ const getMovie = async () => {
 </template>
 
 <style scoped>
+  .list-container {
+  width: 100vw;
+  padding: 1rem;
+  z-index: 2;
+  background-color: #032541;
+  border: 4px solid transparent;
+  border-image: linear-gradient(to right, #88cda5, #07b4e2) 10;
+}
 
+.list-container label {
+  color: white;
+}
+
+.list-container select {
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+#get {
+  padding: 0 1rem;
+  border-radius: 8px;
+  border-color: #767676;
+}
+
+.background-image {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  background-position: center;
+  background-size: cover;
+}
+
+.foreground {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background-color: #000000b4;
+}
+
+.movie-content {
+  display: grid;
+  width: 80vw;
+  grid-template-columns: repeat(16, 4%);
+  gap: 0.5rem 2rem;
+  justify-self: center;
+  align-self: center;
+  color: white;
+  text-shadow: 0 0 0.7rem #000000d7;
+}
+
+#poster {
+  width: 100%;
+  grid-column: span 4;
+  grid-row: 1 / span 6;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  color: #000;
+  box-shadow: 0 0 1rem 3px #000000b4;
+}
+
+#trailer {
+  width: 100%;
+  grid-column: 11 / span 6;
+  grid-row: span 2;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0 1rem 3px #000000b4;
+}
+
+h1 {
+  grid-column: 5 / span 10;
+  vertical-align: middle;
+  font-size: 3vw;
+}
+
+h2 {
+  grid-column: span 6;
+  font-variant: small-caps;
+  font-weight: normal;
+}
+
+h3 {
+  grid-column: span 6;
+  font-weight: normal;
+  font-style: italic;
+  position: relative;
+  bottom: 10%;
+}
+
+#overview {
+  grid-column: span 6;
+  grid-row: 4 / span 4;
+  position: relative;
+  bottom: 10%;
+}
 </style>
