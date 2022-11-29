@@ -5,9 +5,15 @@ import axios from "axios";
 const movie = ref(false);
 const id = ref("");
 
-const trailers = ref("");
-const bgImg = ref("");
+const trailers = ref(""); //read docs for ref arra 
 const runtime = ref("");
+
+// const funct = () => {
+//   trailers.value = movie.videos.results.filter((trailer) => trailer.type === "Trailer");
+//   runtime.value = Math.floor(movie.runtime / 60) + "h" + (movie.runtime % 60) + "m";
+//   console.log(movie);
+//   console.log(runtime);
+// };
 
 const getMovie = async () => {
   movie.value = (
@@ -18,11 +24,12 @@ const getMovie = async () => {
       },
     })
   ).data;
-  trailers.value = movie.videos.results.filter((trailer) => trailer.type === "Trailer");
-  runtime.value = Math.floor(movie.runtime / 60) + "h" + (movie.runtime % 60) + "m";
-  console.log(movie);
-  console.log(runtime);
+  trailers.value = movie.value.videos.results.filter((trailer) => trailer.type === "Trailer");
+  console.log(movie.value.runtime);
+  runtime.value = `${Math.floor(movie.value.runtime / 60)}h${(movie.value.runtime % 60)}m`;
+  // funct();
 };
+
 </script>
 
 <template>
@@ -43,8 +50,7 @@ const getMovie = async () => {
     </select>
     <button id="get" @click="getMovie()">Get</button>
   </div>
-  <p>{{ runtime }}</p>
-  <div class="background-image" :style="{ backgroundImage: 'url(' + movie.backdrop_path + ')' }"></div>
+  <div class="background-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})` }"></div>
   <div class="foreground">
     <div class="movie-content" v-if="movie">
       <img id="poster" :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path">
